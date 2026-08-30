@@ -10,6 +10,8 @@ on:
       - '**.md'
       - '**.gitkeep'
       - '**.gitignore'
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build-ps2:
@@ -64,7 +66,7 @@ jobs:
           export PATH=/opt/ATfE-20.1.0-Linux-x86_64/bin:$PATH
           cmake -B build -DBUILD_PS2=0 -DBUILD_ARM=1 -DBOARD=waveshare-rp2040-tiny
 
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v4
         with:
           name: build-ps2
           path: build
