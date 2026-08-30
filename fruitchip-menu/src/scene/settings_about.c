@@ -19,6 +19,7 @@ static u32 item_idx_modchip_fw_version;
 static u32 item_idx_modchip_bootloader_version;
 static u32 item_idx_update_firmware;
 static u32 item_idx_update_apps;
+static u32 item_idx_credits;
 
 static void pop_scene(struct state *state)
 {
@@ -51,6 +52,11 @@ static void scene_input_handler_settings(struct state *state, int input)
             scene_switch_to_update_scanning(state);
             state->repaint = true;
         }
+        else if (list.hilite_idx == item_idx_credits)
+        {
+            scene_switch_to_message(state, L"Credits\n\nminecraftGman\nawaken1ng");
+            state->repaint = true;
+        }
     }
 }
 
@@ -64,7 +70,8 @@ static void scene_paint_handler_settings(struct state *state)
     state->button_guide.circle = L"Return";
 
     if (list.hilite_idx == item_idx_update_firmware ||
-        list.hilite_idx == item_idx_update_apps)
+        list.hilite_idx == item_idx_update_apps ||
+        list.hilite_idx == item_idx_credits)
     {
         state->button_guide.cross = L"Open";
     }
@@ -108,4 +115,8 @@ void scene_switch_to_settings_about(struct state *state)
     item.left_text = wstring_new_static(L"Update apps");
     item.right_text = wstring_new_static(L">");
     item_idx_update_apps = list_push_item(&list, item);
+
+    item.left_text = wstring_new_static(L"Credits");
+    item.right_text = wstring_new_static(L">");
+    item_idx_credits = list_push_item(&list, item);
 }
