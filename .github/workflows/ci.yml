@@ -16,12 +16,12 @@ on:
 jobs:
   build-ps2:
     runs-on: ubuntu-latest
-    container: ps2dev/ps2dev:latest
+    container: ps2dev/ps2dev:v2.0.0
     steps:
       - run: |
           apk add build-base cmake ccache git linux-headers python3 wine jq
 
-      - if: ${{ env.ACT }} # https://github.com/nektos/act/issues/973
+      - if: ${{ env.ACT }}
         run: |
           apk add nodejs
 
