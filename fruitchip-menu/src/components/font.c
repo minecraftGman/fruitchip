@@ -126,6 +126,23 @@ float font_text_height(const wchar_t *text)
     return glyph_height;
 }
 
+// Returns the total height of a (possibly multi-line) block of text,
+// i.e. the number of lines multiplied by the font's line height
+float font_text_block_height(const wchar_t *text)
+{
+    if (!text)
+        return 0;
+
+    int lineCount = 1;
+    for (int i = 0; text[i] != '\0'; i++)
+    {
+        if (text[i] == '\n')
+            lineCount++;
+    }
+
+    return lineCount * font.lineHeight;
+}
+
 
 // Draws the text with specified max dimensions relative to x and y
 // Returns the bottom Y coordinate of the last line that can be used to draw the next text
@@ -166,12 +183,41 @@ int font_print(GSGLOBAL *gsGlobal, float x, float y, int z, uint64_t color, cons
     return (y + curHeight + font.lineHeight);
 }
 
+// Prints text centered horizontally. For multi-line text (separated by '\n'),
+// each line is centered independently rather than the block as a whole,
+// so lines of differing widths all end up visually centered.
 int font_print_centered(GSGLOBAL *gsGlobal, float y, int z, uint64_t color, const wchar_t *text)
 {
-    float w = font_text_width(text);
-    float x = (gsGlobal->Width - w) / 2;
+    if (!text)
+        return y;
 
-    return font_print(gsGlobal, x, y, z, color, text);
+    int curY = y;
+    const wchar_t *lineStart = text;
+
+    while (1)
+    {
+        const wchar_t *newline = wcschr(lineStart, L'\n');
+        size_t lineLen = newline ? (size_t)(newline - lineStart) : wcslen(lineStart);
+
+        wchar_t lineBuf[128];
+        if (lineLen > sizeof(lineBuf) / sizeof(lineBuf[0]) - 1)
+            lineLen = sizeof(lineBuf) / sizeof(lineBuf[0]) - 1;
+
+        wcsncpy(lineBuf, lineStart, lineLen);
+        lineBuf[lineLen] = L'\0';
+
+        float w = font_text_width(lineBuf);
+        float x = (gsGlobal->Width - w) / 2;
+
+        curY = font_print(gsGlobal, x, curY, z, color, lineBuf);
+
+        if (!newline)
+            break;
+
+        lineStart = newline + 1;
+    }
+
+    return curY;
 }
 
 int font_print_aligned_right(GSGLOBAL *gsGlobal, float xoff, float y, int z, uint64_t color, const wchar_t *text)
