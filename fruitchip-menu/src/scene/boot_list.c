@@ -22,6 +22,7 @@
 #include "components/font.h"
 #include "components/list.h"
 #include "scene/boot_options.h"
+#include "scene/boot_splash.h"
 #include "scene/message.h"
 #include "scene/settings.h"
 #include "scene/superscene.h"
@@ -30,7 +31,7 @@
 #include "state.h"
 #include "utils.h"
 
-static void boot_osdsys(struct state *state)
+static void do_boot_osdsys(struct state *state)
 {
     modchip_cmd_with_retry(MODCHIP_CMD_DISABLE_NEXT_OSDSYS_HOOK, MODCHIP_CMD_RETRIES);
 
@@ -43,7 +44,12 @@ static void boot_osdsys(struct state *state)
     LoadELFFromFile("rom0:OSDSYS", argc, argv);
 }
 
-static void boot_fwfs(struct state *state)
+static void boot_osdsys(struct state *state)
+{
+    scene_switch_to_boot_splash(state, L"Booting OSDSYS", do_boot_osdsys);
+}
+
+static void do_boot_fwfs(struct state *state)
 {
     u8 app_idx = state->boot_list.hilite_idx;
 
@@ -67,6 +73,11 @@ static void boot_fwfs(struct state *state)
 
     char path[] = { 'f', 'w', 'f', 's', ':', FWFS_MODE_DATA_CHAR, app_idx };
     LoadELFFromFile(path, argc, argv);
+}
+
+static void boot_fwfs(struct state *state)
+{
+    scene_switch_to_boot_splash(state, L"Booting game", do_boot_fwfs);
 }
 
 static void boot_rescue_elf(struct state *state)

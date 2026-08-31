@@ -32,6 +32,7 @@ add_executable(fruitchip-menu
     src/scene/settings/update/writing.c
     src/scene/boot_list.c
     src/scene/boot_options.c
+    src/scene/boot_splash.c
     src/scene/init.c
     src/scene/message.c
     src/scene/settings_about.c
