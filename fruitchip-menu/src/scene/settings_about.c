@@ -54,7 +54,7 @@ static void scene_input_handler_settings(struct state *state, int input)
         }
         else if (list.hilite_idx == item_idx_credits)
         {
-            scene_switch_to_message(state, L"Credits\n\nminecraftGman\nawaken1ng\n\nHidden01\n\nMacman12");
+            scene_switch_to_message(state, L"Credits\n\nminecraftGman\nawaken1ng");
             state->repaint = true;
         }
     }

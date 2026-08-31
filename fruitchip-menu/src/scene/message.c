@@ -74,7 +74,7 @@ void scene_switch_to_message(struct state *state, wchar_t *text)
 {
     message_state_t msg_state = {
         .text = wcsdup(text),
-        .y = (state->gs->Height  / 2.0) - font_text_height(text)
+        .y = (state->gs->Height  / 2.0) - (font_text_block_height(text) / 2.0)
     };
 
     array_message_state_push_back(scene_state, msg_state);

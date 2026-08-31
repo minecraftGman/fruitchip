@@ -16,3 +16,5 @@ int font_print_aligned_right(GSGLOBAL *gsGlobal, float xoff, float y, int z, uin
 float font_text_width(const wchar_t *text);
 
 float font_text_height(const wchar_t *text);
+
+float font_text_block_height(const wchar_t *text);
