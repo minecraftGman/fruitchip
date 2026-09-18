@@ -41,6 +41,9 @@ add_executable(fruitchip-fw
     src/boot_rom/write/version.c
     src/reset.c
     src/settings.c
+    src/oled.c
+
+    lib/ssd1306/ssd1306.c
 )
 
 target_include_directories(fruitchip-fw
@@ -51,6 +54,7 @@ target_include_directories(fruitchip-fw
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/wear_leveling
         ${CMAKE_CURRENT_SOURCE_DIR}/../fruitchip-include
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/status_led/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/ssd1306
 )
 
 target_compile_definitions(fruitchip-fw
@@ -71,6 +75,8 @@ target_compile_definitions(fruitchip-fw
         WEAR_LEVELING_RP2040_FLASH
         WEAR_LEVELING_RP2040_FLASH_BASE=${WEAR_LEVELING_RP2040_FLASH_BASE}
         PICO_XOSC_STARTUP_DELAY_MULTIPLIER=0
+        OLED_SDA_PIN=${OLED_SDA_PIN}
+        OLED_SCL_PIN=${OLED_SCL_PIN}
 )
 
 if (DEFINED PICO_DEFAULT_WS2812_PIN)
@@ -109,6 +115,7 @@ target_link_libraries(fruitchip-fw
     hardware_pio
     hardware_dma
     hardware_flash
+    hardware_i2c
 )
 
 pico_enable_stdio_rtt(fruitchip-fw 1)

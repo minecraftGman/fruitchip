@@ -2,6 +2,7 @@
 #include <hardware/clocks.h>
 #include <hardware/pll.h>
 #include <pico/stdio.h>
+#include <pico/time.h>
 
 #include <binary_info_parser.h>
 
@@ -11,6 +12,7 @@
 #include <apps.h>
 #include <binary_info.h>
 #include <git_version.h>
+#include <oled.h>
 #include <panic.h>
 #include <reset.h>
 #include <settings.h>
@@ -59,6 +61,21 @@ void __time_critical_func(main_core1)()
     }
 
     reset_init_irq();
+
+    // Register core1 as a lockout victim *before* it starts doing
+    // persistent work: settings_update_part() checks
+    // multicore_lockout_victim_is_initialized(1) and pauses core1 during
+    // flash writes triggered from core0. Without this, a settings write
+    // could race with core1 running from flash (e.g. mid I2C transfer).
+    multicore_lockout_victim_init();
+
+    oled_init();
+
+    while (true)
+    {
+        oled_task();
+        sleep_ms(200);
+    }
 }
 
 int __time_critical_func(main)()

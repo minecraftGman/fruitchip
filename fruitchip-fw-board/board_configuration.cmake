@@ -6,6 +6,14 @@ else()
     message(FATAL_ERROR "Board file not found: ${BOARD_CONFIG_FILE}")
 endif()
 
+if (NOT DEFINED OLED_SDA_PIN)
+    set(OLED_SDA_PIN 28)
+endif()
+
+if (NOT DEFINED OLED_SCL_PIN)
+    set(OLED_SCL_PIN 29)
+endif()
+
 if (NOT DEFINED FLASH_SIZE_MB)
     message("Flash size not defined, defaulting to 2 MiB")
     set(FLASH_SIZE_MB 2)
