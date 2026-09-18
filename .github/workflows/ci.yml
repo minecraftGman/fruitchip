@@ -83,7 +83,7 @@ jobs:
             build/fruitchip-fw-prefix/src/fruitchip-fw-build/*.uf2
 
       - run: |
-          mkdir release
+          mkdir -p release/fruitchip-fw release/fruitchip-fw-bootloader release/fruitchip-apps release/fruitchip-menu release/fruitchip-test-ps2
 
           git_rev () {
             GIT_REV="$(git log --pretty=format:'%h' -n 1 $1)$(git diff --quiet --exit-code -- $1 || echo '+')"
@@ -91,27 +91,60 @@ jobs:
 
           git_rev fruitchip-fw
           mv "build/fruitchip-fw-prefix/src/fruitchip-fw-build/fruitchip-fw.uf2" \
-             "release/fruitchip-fw-${GIT_REV}-tiny.uf2"
+             "release/fruitchip-fw/fruitchip-fw-${GIT_REV}-tiny.uf2"
 
           git_rev fruitchip-fw-bootloader
           mv "build/fruitchip-fw-bootloader-prefix/src/fruitchip-fw-bootloader-build/fruitchip-fw-bootloader.uf2" \
-             "release/fruitchip-fw-bootloader-${GIT_REV}-tiny.uf2"
+             "release/fruitchip-fw-bootloader/fruitchip-fw-bootloader-${GIT_REV}-tiny.uf2"
 
           GIT_REV="$(git log --pretty=format:'%h' -n 1 fruitchip-fw-apps)"
           mv "build/fruitchip-fw-apps-prefix/src/fruitchip-fw-apps-build/apps.uf2" \
-             "release/fruitchip-apps-${GIT_REV}.uf2"
+             "release/fruitchip-apps/fruitchip-apps-${GIT_REV}.uf2"
 
           git_rev fruitchip-menu
           mv "build/menu/fruitchip-menu-packed.elf" \
-             "release/fruitchip-menu-${GIT_REV}.elf"
+             "release/fruitchip-menu/fruitchip-menu-${GIT_REV}.elf"
 
           git_rev fruitchip-test-ps2
           mv "build/fruitchip-test-ps2-prefix/src/fruitchip-test-ps2-build/fruitchip-test-ps2-packed.elf" \
-             "release/fruitchip-test-ps2-${GIT_REV}.elf"
+             "release/fruitchip-test-ps2/fruitchip-test-ps2-${GIT_REV}.elf"
 
       - uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/master'
         with:
           prerelease: true
-          tag_name: latest
-          files: release/*
+          tag_name: fruitchip-fw-latest
+          name: fruitchip-fw
+          files: release/fruitchip-fw/*
+
+      - uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/master'
+        with:
+          prerelease: true
+          tag_name: fruitchip-fw-bootloader-latest
+          name: fruitchip-fw-bootloader
+          files: release/fruitchip-fw-bootloader/*
+
+      - uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/master'
+        with:
+          prerelease: true
+          tag_name: fruitchip-apps-latest
+          name: fruitchip-apps
+          files: release/fruitchip-apps/*
+
+      - uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/master'
+        with:
+          prerelease: true
+          tag_name: fruitchip-menu-latest
+          name: fruitchip-menu
+          files: release/fruitchip-menu/*
+
+      - uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/master'
+        with:
+          prerelease: true
+          tag_name: fruitchip-test-ps2-latest
+          name: fruitchip-test-ps2
+          files: release/fruitchip-test-ps2/*
