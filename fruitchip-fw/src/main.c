@@ -70,6 +70,7 @@ void __time_critical_func(main_core1)()
     multicore_lockout_victim_init();
 
     oled_init();
+    oled_show_splash(1500);
 
     while (true)
     {

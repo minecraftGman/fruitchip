@@ -9,6 +9,7 @@
 #include <settings.h>
 
 #include <oled.h>
+#include <oled_splash.h>
 
 static ssd1306_t disp;
 static bool disp_ok = false;
@@ -28,6 +29,26 @@ void oled_init(void)
 
     if (!disp_ok)
         printf("oled: init failed (check wiring / i2c address)\n");
+}
+
+void oled_show_splash(uint32_t splash_ms)
+{
+    if (!disp_ok)
+        return;
+
+    ssd1306_clear(&disp);
+
+#if OLED_SPLASH_USE_BITMAP
+    // Full-screen 128x64 1bpp bitmap, defined in oled_splash.h.
+    ssd1306_bmp_show_image(&disp, oled_splash_bmp, sizeof(oled_splash_bmp));
+#else
+    // Placeholder text wordmark until a real bitmap is supplied.
+    ssd1306_draw_string(&disp, 16, 24, 3, "SKYNET");
+    ssd1306_draw_empty_square(&disp, 0, 0, 128, 64);
+#endif
+
+    ssd1306_show(&disp);
+    sleep_ms(splash_ms);
 }
 
 void oled_task(void)
