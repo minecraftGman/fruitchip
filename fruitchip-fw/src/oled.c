@@ -41,10 +41,6 @@ void oled_show_splash(uint32_t splash_ms)
 #if OLED_SPLASH_USE_BITMAP
     // Full-screen 128x64 1bpp bitmap, defined in oled_splash.h.
     ssd1306_bmp_show_image(&disp, oled_splash_bmp, sizeof(oled_splash_bmp));
-#else
-    // Placeholder text wordmark until a real bitmap is supplied.
-    ssd1306_draw_string(&disp, 16, 24, 3, "SKYNET");
-    ssd1306_draw_empty_square(&disp, 0, 0, 128, 64);
 #endif
 
     ssd1306_show(&disp);
